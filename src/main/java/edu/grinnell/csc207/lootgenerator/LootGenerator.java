@@ -27,7 +27,7 @@ public class LootGenerator {
             if(lineTC.startsWith(treasureClass)){
                 dropsLine = lineTC.substring(treasureClass.length()); //get everything after the TC name
                 dropsLine = dropsLine.replaceFirst("\\s+", ""); //get rid of the spaces at the beginning
-                String[] dropsArr = dropsLine.split("\\t");
+                String[] dropsArr = dropsLine.split("\t");
 
                 //Randomly choose one of three drops.
                 Random random = new Random();
@@ -56,6 +56,31 @@ public class LootGenerator {
         buffTC.close();
         return "treasureClass doesn't exist";
     }
+
+    public static String generateSuffixOrPrefix(String file) throws IOException{
+            FileReader fileSuffix = new FileReader("data/small/" + file);
+            BufferedReader buffSuffix = new BufferedReader(fileSuffix);
+             int totalLinesSuffix = 0;
+             String lineSuffix = null;
+             while((lineSuffix = buffSuffix.readLine())!= null){
+                totalLinesSuffix++;
+             }
+             buffSuffix.close();
+             //reopen buffSuffix
+             buffSuffix = new BufferedReader(new FileReader("data/small/" + file));
+             Random random = new Random();
+             int randomSuffixLine = random.nextInt(totalLinesSuffix);
+             int currentLineNumberSuffix = 0;
+             while ((lineSuffix = buffSuffix.readLine()) != null) {
+                if (currentLineNumberSuffix == randomSuffixLine) {
+                    break;
+                }
+                else{
+                    currentLineNumberSuffix++;
+                }
+            } 
+            return lineSuffix;
+    }
     public static void main(String[] args) throws IOException {
         System.out.println("This program kills monsters and generates loot!");
         
@@ -79,7 +104,7 @@ public class LootGenerator {
 
         while((lineMonstats = buffMonstats.readLine()) != null){
             if(currentLine == rand){
-                classMonstats = lineMonstats.split(" ")[0];
+                classMonstats = lineMonstats.split("\\t")[0];
                 //find the level index (the index of last number and divide the line with split)
                 //everything after is a treasure class
                 treasureClass = lineMonstats.replaceFirst(".*?\\d+\\s+", "");
@@ -90,8 +115,6 @@ public class LootGenerator {
             }
         }
         buffMonstats.close();
-        System.out.println("class:" + classMonstats);
-        System.out.println("treasure class:" + treasureClass);
         buffMonstats.close();
 
         //Create array that contains treasure classes
@@ -116,7 +139,6 @@ public class LootGenerator {
         }
         //Look up the monster's TC in TreasureClassEx.txt.
         String findDrop = findDrop(treasureClass, treasureClassArr);
-        System.out.println("findDrop: " + findDrop);
         //The base item that we finally choose is the randomly generated drop from our monster!
         buffTC.close();
 
@@ -129,8 +151,62 @@ public class LootGenerator {
                 int minDefence = Integer.parseInt(lineDefence.split("\\t")[1]);
                 int maxDefence = Integer.parseInt(lineDefence.split("\\t")[2]);
                 defence = random.nextInt(minDefence, maxDefence+1);
-                System.out.println("Defense: " + defence);
             }
         }
+
+        //Generating suffix and prefix
+        int randSuffix = random.nextInt(2);
+        int randPrefix = random.nextInt(2);
+        String prefix = "";
+        String suffix = "";
+        int valueSuffix = 0;
+        String statisticTextSuffix = null;
+        if(randSuffix == 1){
+            String lineSuffix = generateSuffixOrPrefix("MagicSuffix.txt");
+            //extract suffix, statistic text, and value
+             suffix = lineSuffix.replaceFirst("\\t.*", "");
+             statisticTextSuffix = lineSuffix.split("\\t")[1];
+             int minSuffix = Integer.parseInt(lineSuffix.split("\\t")[2]);
+             int maxSuffix = Integer.parseInt(lineSuffix.split("\\t")[3]);
+             valueSuffix = random.nextInt(minSuffix, maxSuffix+1);
+        }
+
+        int valuePrefix = 0;
+        String statisticTextPrefix = null;
+        if(randPrefix == 1){
+            String linePrefix = generateSuffixOrPrefix("MagicPrefix.txt");
+            //extract suffix, statistic text, and value
+             prefix = linePrefix.replaceFirst("\\t.*", "");
+             statisticTextPrefix = linePrefix.split("\\t")[1];
+             int minPrefix = Integer.parseInt(linePrefix.split("\\t")[2]);
+             int maxPrefix = Integer.parseInt(linePrefix.split("\\t")[3]);
+             valuePrefix = random.nextInt(minPrefix, maxPrefix+1);
+        }
+        String fullName = findDrop;
+        if(valueSuffix!=0 && valuePrefix!=0){
+            fullName = prefix + " " + findDrop + " " + suffix;
+        }
+        else if(valueSuffix!=0 && valuePrefix==0){
+            fullName = findDrop + " " + suffix;
+        }
+        else if(valueSuffix==0 && valuePrefix!=0){
+            fullName = prefix + " " + findDrop;
+        }
+
+        //Output
+        System.out.println("--------------------------------------------------");
+        System.out.println("Fighting " + classMonstats + "...");
+        System.out.println("You have slaid " + classMonstats + "!");
+        System.out.println(classMonstats + " dropped:");
+        System.out.println("");
+        System.out.println(fullName);
+        System.out.println("Defense: " + defence);
+        if(valueSuffix!=0){
+            System.out.println(valueSuffix + " " + statisticTextSuffix);
+        }
+        if(valuePrefix!=0){
+            System.out.println(valuePrefix + " " + statisticTextPrefix);
+        }
+        System.out.println("--------------------------------------------------");
 }
 }
