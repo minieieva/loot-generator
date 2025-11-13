@@ -118,6 +118,19 @@ public class LootGenerator {
         String findDrop = findDrop(treasureClass, treasureClassArr);
         System.out.println("findDrop: " + findDrop);
         //The base item that we finally choose is the randomly generated drop from our monster!
+        buffTC.close();
 
-    }
+        //Computing base stats for a base item
+        BufferedReader buffDefence = new BufferedReader(new FileReader("data/small/armor.txt"));
+        String lineDefence = null;
+        int defence = 0;
+        while((lineDefence = buffDefence.readLine()) != null){
+            if(lineDefence.startsWith(findDrop)){
+                int minDefence = Integer.parseInt(lineDefence.split("\\t")[1]);
+                int maxDefence = Integer.parseInt(lineDefence.split("\\t")[2]);
+                defence = random.nextInt(minDefence, maxDefence+1);
+                System.out.println("Defense: " + defence);
+            }
+        }
+}
 }
