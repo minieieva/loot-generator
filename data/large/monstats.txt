@@ -1,5 +1,5 @@
 DarkHunter	CorruptRogue	2	Act 1 H2H A
-SpiderMagus	EvilSpiders	23	Act 3 H2H B
+SpiderMagus EvilSpiders	23	Act 3 H2H B
 Apparition	Wraith  20	Act 2 Wraith C
 QuillRat	SpikeFiend	1	Quill 1
 TrappedSoul special	30	Trapped Soul
