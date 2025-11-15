@@ -9,13 +9,11 @@ public class Monstats {
         this.treasureClass = treasureClass;
     }
 
-    public String getName()
-    { 
-        return monstClass; 
+    public String getName() {
+        return monstClass;
     }
-    
-    public String getTreasureClass()
-    { 
-        return treasureClass; 
+
+    public String getTreasureClass() {
+        return treasureClass;
     }
 }

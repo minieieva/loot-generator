@@ -1,16 +1,16 @@
 DarkHunter	CorruptRogue	2	Act 1 H2H A
-SpiderMagus EvilSpiders	23	Act 3 H2H B
-Apparition	Wraith  20	Act 2 Wraith C
+SpiderMagus	EvilSpiders	23	Act 3 H2H B
+Apparition	Wraith	20	Act 2 Wraith C
 QuillRat	SpikeFiend	1	Quill 1
-TrappedSoul special	30	Trapped Soul
-Undead RatMan   Fetish	10	Act 1 H2H C
+TrappedSoul	special	30	Trapped Soul
+Undead RatMan	Fetish	10	Act 1 H2H C
 DefiledWarrior	ReanimatedHorde	42	Act 5 H2H C
 Diablo	Boss	40	Diablo
 SuckerNest	SuckerNest	6	Act 1 H2H B
 Corpulent	Regurgitator	24	Act 4 H2H A
 SaberCat	PantherWoman	15	Act 2 H2H A
-DoomKnight  Undead Horror	24  Act 4 H2H A
-HellCat	PantherWoman    19	Act 2 H2H C
+DoomKnight	Undead Horror	24	Act 4 H2H A
+HellCat	PantherWoman	19	Act 2 H2H C
 RazorSpine	SpikeFiend	9	Quill 4
 SandRaider	SandRaider	13	Act 2 H2H A
 HellSwarm	Swarm	22	Swarm 2

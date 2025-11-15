@@ -5,7 +5,7 @@ public class Armor {
     public int minac;
     public int maxac;
 
-    public Armor(String name, int minac, int maxac){
+    public Armor(String name, int minac, int maxac) {
         this.name = name;
         this.minac = minac;
         this.maxac = maxac;

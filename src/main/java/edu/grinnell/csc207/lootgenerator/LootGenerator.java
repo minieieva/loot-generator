@@ -11,17 +11,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.Scanner;
 
 import edu.grinnell.csc207.lootgenerator.Monstats;
 import edu.grinnell.csc207.lootgenerator.TreasureClass;
 import edu.grinnell.csc207.lootgenerator.Armor;
 
 public class LootGenerator {
-    /** The path to the dataset (either the small or large set). */
-    private static final String DATA_SET = "data/small";
+    /** The path to the dataset (either the large or large set). */
+    private static final String DATA_SET = "data/large";
 
     public static String generateSuffixOrPrefix(String file) throws IOException {
-        FileReader fileSuffix = new FileReader("data/small/" + file);
+        FileReader fileSuffix = new FileReader("data/large/" + file);
         BufferedReader buffSuffix = new BufferedReader(fileSuffix);
         int totalLinesSuffix = 0;
         String lineSuffix = null;
@@ -30,7 +31,7 @@ public class LootGenerator {
         }
         buffSuffix.close();
         // reopen buffSuffix
-        buffSuffix = new BufferedReader(new FileReader("data/small/" + file));
+        buffSuffix = new BufferedReader(new FileReader("data/large/" + file));
         Random random = new Random();
         int randomSuffixLine = random.nextInt(totalLinesSuffix);
         int currentLineNumberSuffix = 0;
@@ -55,7 +56,7 @@ public class LootGenerator {
     public static List<Monstats> parseMonstats() throws IOException {
 
         // Getting data from monstats.txt
-        FileReader fileMonstats = new FileReader("data/small/monstats.txt");
+        FileReader fileMonstats = new FileReader("data/large/monstats.txt");
         BufferedReader buffMonstats = new BufferedReader(fileMonstats);
 
         // populate listMonstats
@@ -80,7 +81,7 @@ public class LootGenerator {
     public static Map<String, TreasureClass> parseTreasureClass() throws IOException {
 
         // Getting data from TreasureClassEx.txt
-        FileReader fileTC = new FileReader("data/small/TreasureClassEx.txt");
+        FileReader fileTC = new FileReader("data/large/TreasureClassEx.txt");
         BufferedReader buffTC = new BufferedReader(fileTC);
 
         // populate Map
@@ -106,7 +107,7 @@ public class LootGenerator {
     public static Map<String, Armor> parseArmor() throws IOException {
 
         // Getting data from armor.txt
-        FileReader fileDefence = new FileReader("data/small/armor.txt");
+        FileReader fileDefence = new FileReader("data/large/armor.txt");
         BufferedReader buffDefence = new BufferedReader(fileDefence);
 
         // populate Map
@@ -132,7 +133,7 @@ public class LootGenerator {
      */
     public static Map<String, MagicSuffix> parseMagicSuffix() throws IOException {
         // Getting data from MagicSuffix.txt
-        FileReader fileSuffix = new FileReader("data/small/MagicSuffix.txt");
+        FileReader fileSuffix = new FileReader("data/large/MagicSuffix.txt");
         BufferedReader buffSuffix = new BufferedReader(fileSuffix);
 
         // populate Map
@@ -159,7 +160,7 @@ public class LootGenerator {
      */
     public static Map<String, MagicPrefix> parseMagicPrefix() throws IOException {
         // Getting data from MagicPrefix.txt
-        FileReader filePrefix = new FileReader("data/small/MagicPrefix.txt");
+        FileReader filePrefix = new FileReader("data/large/MagicPrefix.txt");
         BufferedReader buffPrefix = new BufferedReader(filePrefix);
 
         // populate Map
@@ -354,24 +355,41 @@ public class LootGenerator {
         // Pick random monster
         List<Monstats> listMonstats = parseMonstats();
         Monstats monster = pickMonster(listMonstats);
-        System.out.println("Random monster: " + monster.getName());
-        System.out.println("Monster treasure class: " + monster.getTreasureClass());
 
         // Find treasure class drop
         Map<String, TreasureClass> treasureClassMap = parseTreasureClass();
         String findDrop = generateBaseItem(treasureClassMap, monster.getTreasureClass());
-        System.out.println("Item dropped: " + findDrop);
 
         // Compute base stats for a base item
         Map<String, Armor> armorMap = parseArmor();
         int baseStats = generateBaseStats(armorMap, findDrop);
-        System.out.println("Stats for item dropped: " + baseStats);
 
         // Generating suffix and prefix
         Map<String, MagicSuffix> suffixMap = parseMagicSuffix();
         Map<String, MagicPrefix> prefixMap = parseMagicPrefix();
         String[] affixes = generateAffix(suffixMap, prefixMap);
 
+        Scanner scanner = new Scanner(System.in);
+        String again = "";
+        boolean yes = true;
+
         generateLoot(monster, findDrop, affixes, baseStats);
+
+        while (yes) {
+            System.out.print("Fight again [y/n]? ");
+            again = scanner.nextLine();
+            if (again.equals("y") || again.equals("Y")) {
+                monster = pickMonster(listMonstats);
+                findDrop = generateBaseItem(treasureClassMap, monster.getTreasureClass());
+                baseStats = generateBaseStats(armorMap, findDrop);
+                affixes = generateAffix(suffixMap, prefixMap);
+                generateLoot(monster, findDrop, affixes, baseStats);
+
+            } else if (again.equals("n") || again.equals("N")) {
+                yes = false;
+            } else {
+                System.out.println("Invalid input.");
+            }
+        }
     }
 }

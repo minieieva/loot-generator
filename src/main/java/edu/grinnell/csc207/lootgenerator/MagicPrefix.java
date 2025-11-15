@@ -12,5 +12,5 @@ public class MagicPrefix {
         this.mod1min = mod1min;
         this.mod1max = mod1max;
     }
-    
+
 }
